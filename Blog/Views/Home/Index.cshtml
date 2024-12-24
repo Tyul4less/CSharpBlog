@@ -1,0 +1,78 @@
+﻿@model List<Blog.Models.MostView>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron" style="margin: 0">
+    <h1>Blog</h1>
+    <p class="lead">Blog Test</p>
+</div>
+
+<div class="panel-title" style="margin: 5px 15px">
+    Most View Post
+</div>
+
+<div class="w-full" style="display: flex; justify-content: space-between">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var mostView in Model)
+        {
+            <div class="most-view">
+                <h4 class="title" title="@mostView.Title">
+                    @mostView.Title
+                </h4>
+                <p class="content">
+                    @mostView.Content
+                </p>
+                <p>
+                    <button class="btn btn-default" onclick="viewPost(@mostView.Id)">View Post &raquo;</button>
+                </p>
+            </div>
+        }
+    } else {
+        <p>No most viewed posts available.</p>
+    }
+</div>
+
+<script>
+    const viewPost = (boardId) => {
+        $.ajax({
+            url: '@Url.Action("GetBoardByBoardId", "Board")',
+            data: { boardId },
+            type: 'POST',
+            success: (data) => {
+                alert(data)
+            },
+            error: function () {
+                $('#message').text('Error while fetching message.');
+            }
+        });
+    }
+    
+
+</script>
+
+<style scoped>
+    .most-view {
+        width: 32%;
+        height: 140px;
+        border: 1px solid #dcdcdc; 
+        border-radius: 5px;
+        padding: 0 15px;
+    }
+    
+    .title {
+        white-space: nowrap; 
+        text-overflow: ellipsis; 
+        overflow: hidden;
+    }
+    
+    .content {
+        word-break: break-word; 
+        text-overflow: ellipsis; 
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
